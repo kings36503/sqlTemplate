@@ -199,7 +199,7 @@ class SqlComposer
                 if (isset(self::$daoArr[$daoName])) {
                     $dbDao = self::$daoArr[$daoName];
                 } else {
-                    $dbDao = BeanUtil::getBean($daoName);
+                    $dbDao = BeanUtil::getClassInstanceByPath($daoName);
                     self::$daoArr[$daoName] = $dbDao;
                 }
                 return $dbDao;

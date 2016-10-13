@@ -1,6 +1,6 @@
 {
 	"report": {
-		"daoName": "report_dao_mysql",
+		"daoName": "snow\\song\\db\\mysql\\ReportDao",
 		"createDB": [
 			"CREATE DATABASE IF NOT EXISTS `report`;"
 		],

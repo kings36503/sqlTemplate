@@ -75,10 +75,10 @@ that all right, you can see the comments as follows:
         "report" : {
         /**
          * MUST
-         * name of the dbdao, it will be initialized in a reflection way. this dao must 
+         * Class path of the dbdao, it will be initialized in a reflection way. this dao must 
          * implement interface db\IDBDAO. 
 		 */
-        "daoName" : "report_dao_mysql", 
+        "daoName" : "snow\\song\\db\\mysql\\ReportDao", 
          /** 
           * MUST ==== SQL ID which value can not be literal 'daoName' stand for a sql statement.  
 		  * SQL ID consist of many elements, such as 'iterate', 'dynamic', 'isEqual' etc. 

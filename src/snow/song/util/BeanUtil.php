@@ -13,35 +13,20 @@ use ReflectionClass;
 class BeanUtil
 {
 
-    /**
-     * An array contains beans list which name is the key, and namespace is the value.
-     *
-     * @var unknown
-     */
-    private static $beanNameMap = array(
-        'report_dao_mysql' => 'snow\song\db\mysql\ReportDao'
-    );
-
     private static $beanMap;
     /**
-     * Get a bean object according bean's name
+     * Get a bean object according bean's class path
      *
-     * @param string $beanName            
+     * @param string $beanName
      */
-    public static function getBean($beanName)
-    {
-        if (isset(self::$beanMap[$beanName])) {
-            return self::$beanMap[$beanName];
-        } else {
-            $clsPath = self::$beanNameMap[$beanName];
-            if (! empty($clsPath)) {
-                $reflector = new ReflectionClass($clsPath);
-                $item = $reflector->newInstance();
-                self::$beanMap[$beanName] = $item;
-                return $item;
-            } else {
-                throw new \Exception('There is no bean identified by : ' . $beanName);
-            }
+    public static function getClassInstanceByPath($clsPath){
+        if (isset(self::$beanMap[$clsPath])) {
+            return self::$beanMap[$clsPath];
+        }else{
+            $reflector = new ReflectionClass($clsPath);
+            $instance = $reflector->newInstance();
+            self::$beanMap[$clsPath] = $instance;
+            return $instance;
         }
     }
 }
