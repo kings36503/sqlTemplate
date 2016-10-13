@@ -1,6 +1,7 @@
 {
   "name" : "kings36503/sql-template",
   "description" : "A powerful PHP SQL template composer library which can significantly reduce the number and complexity of the SQL statement in the project. Reference to the ibatis implementation.",
+  "keywords"   : ["library", "sql", "template"],
   "require" : {
     "php" : ">=5.5.10"
   },
@@ -10,6 +11,7 @@
       "" : "src/"
     }
   },
+  "license": "Apache-2.0",
   "type" : "library",
   "authors" : [ {
     "name" : "Xuezhi Song",
