@@ -1,0 +1,307 @@
+{
+	"type": "object",
+	"additionalProperties": {
+		"$ref": "#/definitions/namespace"
+	},
+	"definitions": {
+		"variable": {
+			"description" : "Match common programming language variable names.",
+			"type": "string",
+			"pattern": "[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*"
+		},
+		"namespace": {
+			"description" : "Match namespace, which is a collection of SQL statements.",
+			"type": "object",
+			"properties": {
+				"daoName": {
+					"description" : "Name of the dbdao, it will be initialized in a reflection way. this dao must implement interface db\\IDBDAO. ",
+					"type": "string"
+				}
+			},
+			"required": [
+				"daoName"
+			],
+			"additionalProperties": {
+				"type": "array",
+				"items": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"$ref": "#/definitions/unaryOperation"
+						},
+						{
+							"$ref": "#/definitions/binaryOperation"
+						},
+						{
+							"$ref": "#/definitions/include"
+						},
+						{
+							"$ref": "#/definitions/dynamic"
+						},
+						{
+							"$ref": "#/definitions/iterate"
+						}
+					]
+				},
+				"additionalItems": false
+			}
+		},
+		"include": {
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [
+						"include"
+					]
+				},
+				"refid": {
+					"$ref": "#/definitions/variable"
+				}
+			},
+			"required": [
+				"type",
+				"refid"
+			],
+			"additionalProperties": false
+		},
+		"unaryOperation": {
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [
+						"isPropertyAvailable",
+						"isNotPropertyAvailable",
+						"isNull",
+						"isNotNull",
+						"isEmpty",
+						"isNotEmpty"
+					]
+				},
+				"prepend": {
+					"type": "string"
+				},
+				"property": {
+					"type": "string"
+				},
+				"open": {
+					"type": "string"
+				},
+				"close": {
+					"type": "string"
+				},
+				"contents": {
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"$ref": "#/definitions/unaryOperation"
+							},
+							{
+								"$ref": "#/definitions/binaryOperation"
+							},
+							{
+								"$ref": "#/definitions/include"
+							},
+							{
+								"$ref": "#/definitions/dynamic"
+							},
+							{
+								"$ref": "#/definitions/iterate"
+							}
+						]
+					},
+					"additionalItems": false
+				}
+			},
+			"required": [
+				"type",
+				"property"
+			],
+			"additionalProperties": false
+		},
+		"binaryOperation": {
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [
+						"isEqual",
+						"isNotEqual",
+						"isGreaterThan",
+						"isGreaterEqual",
+						"isLessThan",
+						"isLessEqual"
+					]
+				},
+				"prepend": {
+					"type": "string"
+				},
+				"property": {
+					"type": "string"
+				},
+				"open": {
+					"type": "string"
+				},
+				"close": {
+					"type": "string"
+				},
+				"compareValue": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number"
+						},
+						{
+							"type": "boolean"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"contents": {
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"$ref": "#/definitions/unaryOperation"
+							},
+							{
+								"$ref": "#/definitions/binaryOperation"
+							},
+							{
+								"$ref": "#/definitions/include"
+							},
+							{
+								"$ref": "#/definitions/dynamic"
+							},
+							{
+								"$ref": "#/definitions/iterate"
+							}
+						]
+					},
+					"additionalItems": false
+				}
+			},
+			"required": [
+				"type",
+				"property",
+				"compareValue"
+			],
+			"additionalProperties": false
+		},
+		"dynamic": {
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [
+						"dynamic"
+					]
+				},
+				"prepend": {
+					"type": "string"
+				},
+				"open": {
+					"type": "string"
+				},
+				"close": {
+					"type": "string"
+				},
+				"contents": {
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"$ref": "#/definitions/unaryOperation"
+							},
+							{
+								"$ref": "#/definitions/binaryOperation"
+							},
+							{
+								"$ref": "#/definitions/include"
+							},
+							{
+								"$ref": "#/definitions/dynamic"
+							}
+						]
+					},
+					"additionalItems": false
+				}
+			},
+			"required": [
+				"type"
+			],
+			"additionalProperties": false
+		},
+		"iterate": {
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [
+						"iterate"
+					]
+				},
+				"property": {
+					"type": "string"
+				},
+				"prepend": {
+					"type": "string"
+				},
+				"open": {
+					"type": "string"
+				},
+				"close": {
+					"type": "string"
+				},
+				"conjunction": {
+					"type": "string"
+				},
+				"contents": {
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"$ref": "#/definitions/unaryOperation"
+							},
+							{
+								"$ref": "#/definitions/binaryOperation"
+							},
+							{
+								"$ref": "#/definitions/include"
+							},
+							{
+								"$ref": "#/definitions/dynamic"
+							},
+							{
+								"$ref": "#/definitions/iterate"
+							}
+						]
+					},
+					"additionalItems": false
+				}
+			},
+			"required": [
+				"type",
+				"property"
+			],
+			"additionalProperties": false
+		}
+	}
+}

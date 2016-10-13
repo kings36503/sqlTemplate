@@ -1,0 +1,140 @@
+{
+	"report": {
+		"daoName": "report_dao_mysql",
+		"createDB": [
+			"CREATE DATABASE IF NOT EXISTS `report`;"
+		],
+		"createTable1": [
+			"CREATE TABLE IF NOT EXISTS `report`.`table_1` ( `sip` int(10), `dip` int(10), `alert` varchar(1024) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+		],
+		"createTable2": [
+			"CREATE TABLE IF NOT EXISTS `report`.`table_2` ( `sip` int(10), `dip` int(10), `alert` varchar(1024) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+		],
+		"truncateTable1": [
+			"TRUNCATE TABLE report.table_1;"
+		],
+		"truncateTable2": [
+			"TRUNCATE TABLE report.table_2;"
+		],
+		"addTable1Data": [
+			"INSERT INTO report.table_1 VALUES",
+			{
+				"type" : "iterate",
+				"property" : "count",
+				"conjunction" : ",",
+				"contents" : [
+					"(#count[]#i, #count[]#i, 'alert name $count[]$')"
+				]
+			}
+		],
+		"addTable2Data": [
+			"INSERT INTO report.table_2 VALUES",
+			{
+				"type" : "iterate",
+				"property" : "count",
+				"conjunction" : ",",
+				"contents" : [
+					"(#count[]#i, #count[]#i, 'alert name $count[]$')"
+				]
+			}
+		],
+		"useReport" : ["use report;"],
+		"testSql": [
+			"SELECT count(*) FROM report.t_file_result"
+		],
+		"getReport": [
+			"SELECT * FROM",
+			{
+				"type": "iterate",
+				"property": "tableNames",
+				"open": "(",
+				"close": ") AS t1",
+				"conjunction": "UNION ALL",
+				"prepend": "",
+				"contents": [
+					"SELECT sip, dip, alert FROM $tableNames[]$",
+					{
+						"type": "dynamic",
+						"prepend": "WHERE",
+						"contents": [
+							{
+								"type": "include",
+								"refid": "conditions"
+							},
+							{
+								"type": "dynamic",
+								"prepend": "AND",
+								"contents": [
+									{
+										"type": "isEqual",
+										"property": "ip.hasDstIp",
+										"compareValue": "true",
+										"prepend": "AND",
+										"contents": [
+											{
+												"type": "iterate",
+												"property": "ip.dstIp",
+												"prepend": "dip IN",
+												"open": "(",
+												"close": ")",
+												"conjunction": ",",
+												"contents": [
+													" #ip.dstIp[]#i "
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					},
+					"GROUP BY sip"
+				]
+			},
+			{
+				"type": "include",
+				"refid": "limit"
+			}
+		],
+		"conditions": [
+			{
+				"type": "dynamic",
+				"open": "(",
+				"close": ")",
+				"contents": [
+					{
+						"type": "isPropertyAvailable",
+						"property": "ip.srcIp1",
+						"prepend": "AND",
+						"contents": [
+							" sip >= $ip.srcIp$ "
+						]
+					},
+					{
+						"type": "include",
+						"refid": "alertName"
+					}
+				]
+			}
+		],
+		"alertName": [
+			{
+				"type": "isNotNull",
+				"property": "alertName",
+				"prepend": "AND",
+				"contents": [
+					" alert like #alertName#s "
+				]
+			}
+		],
+		"limit": [
+			{
+				"type": "isNotEmpty",
+				"property": "limit",
+				"contents": [
+					"LIMIT #limit.one#i, #limit.two#i"
+				]
+			}
+		]
+	}
+}
