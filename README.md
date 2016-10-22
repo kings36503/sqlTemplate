@@ -5,9 +5,9 @@ ibatis-like php based library, it can be used as a sql template, support mysql n
 # Example Usage
 
 - prepare a mysql/mariaDB server.
-- open [src/db/mysql/ReportDao.php](https://github.com/kings36503/php-ibatis/blob/master/src/db/mysql/ReportDao.php)
+- open [src/db/mysql/ReportDao.php](https://github.com/kings36503/sqlTemplate/blob/master/src/db/mysql/ReportDao.php)
 - go to line 15, change the host, username, password to your own mysql/mariaDB server.
-- Run [example.php](https://github.com/kings36503/php-ibatis/blob/master/example.php) in CLI mode: php example.php
+- Run [example.php](https://github.com/kings36503/sqlTemplate/blob/master/example.php) in CLI mode: php example.php
 ~~~php
 // load configuration file
 $sqlComposer = new SqlComposer(__DIR__ . '/sqlmap/sqlmapACC.json', true);
@@ -62,7 +62,7 @@ print_r($result);
 
 # Configuration detail
 
-Configuration is JSON format, [schema.json](https://github.com/kings36503/php-ibatis/blob/master/sqlmap/schema.json) is the json schema of the file. if you are familiar with 
+Configuration is JSON format, [schema.json](https://github.com/kings36503/sqlTemplate/blob/master/sqlmap/schema.json) is the json schema of the file. if you are familiar with 
 ibatis sqlMap config, it will be easy for you to use. If you never heard of ibatis sqlMap config, 
 that all right, you can see the comments as follows:
 
