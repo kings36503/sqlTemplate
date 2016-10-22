@@ -1,6 +1,18 @@
-# php-ibatis
+# SqlTemplate
 
-ibatis-like php based library, it can be used as a sql template, support mysql now, and will support more db type later. PHP version 5.5.10 or later.
+ibatis-like php based sqltemplate library, it can be used as a sql template, support mysql now, and will support more db type later. PHP version 5.5.10 or later.
+
+# Installing
+
+Preferred way to install is with [Composer](https://getcomposer.org/).
+
+Just add
+
+    "require" : {
+    	"kings36503/sql-template" : "dev-master",
+  	}
+
+in your projects composer.json.
 
 # Example Usage
 
