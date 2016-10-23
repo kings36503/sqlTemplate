@@ -13,9 +13,30 @@ class MySqlBaseDao implements IDBDao
 
     private $mysqli;
 
+    private $host;
+
+    private $user;
+
+    private $pwd;
+
+    private $db;
+
     function __construct($host = '127.0.0.1', $user = 'root', $pwd = 'password', $db = 'mysql')
     {
-        $this->mysqli = new mysqli($host, $user, $pwd, $db);
+        $this->host = $host;
+        $this->user = $user;
+        $this->pwd = $pwd;
+        $this->db = $db;
+        $this->realConnect();
+    }
+
+    private function realConnect()
+    {
+        if (! is_null($this->mysqli)) {
+            $this->mysqli->close();
+            $this->mysqli = NULL;
+        }
+        $this->mysqli = new mysqli($this->host, $this->user, $this->pwd, $this->db);
         if ($this->mysqli->connect_error) {
             throw new Exception('Connectin Error (' . $this->mysqli->connect_errno . ') ' . $this->mysqli->connect_error);
         }
@@ -33,7 +54,7 @@ class MySqlBaseDao implements IDBDao
      */
     function query($sql, array $param = NULL)
     {
-        if ($this->mysqli->stat()) {
+        for ($i = 0; $i < 2; $i ++) {
             if ($stmt = $this->mysqli->prepare($sql)) {
                 if (! empty($param)) {
                     call_user_func_array(array(
@@ -72,10 +93,14 @@ class MySqlBaseDao implements IDBDao
                     }
                 }
             } else {
-                throw new \Exception($this->mysqli->error . "\n" . ' error sql: ' . $sql . ";\n" . ' param: ' . json_encode($param));
+                if ($this->mysqli->errno == 2006 || $this->mysqli->errno == 2013) {
+                    $this->realConnect();
+                    continue;
+                } else {
+                    throw new \Exception($this->mysqli->error . "\n" . ' error sql: ' . $sql . ";\n" . ' param: ' . json_encode($param));
+                }
             }
         }
-        throw new \Exception('system db error');
     }
 
     /**
@@ -86,7 +111,7 @@ class MySqlBaseDao implements IDBDao
      */
     function execute($sql, array $param = NULL)
     {
-        if ($this->mysqli->stat()) {
+        for ($i = 0; $i < 2; $i ++) {
             if (! empty($param)) {
                 if ($stmt = $this->mysqli->prepare($sql)) {
                     call_user_func_array(array(
@@ -96,14 +121,27 @@ class MySqlBaseDao implements IDBDao
                     $result = $stmt->execute();
                     $stmt->close();
                     return $result;
+                } else {
+                    if ($this->mysqli->errno == 2006 || $this->mysqli->errno == 2013) {
+                        $this->realConnect();
+                        continue;
+                    } else {
+                        throw new \Exception($this->mysqli->error . "\n" . ' error sql: ' . $sql . ";\n" . ' param: ' . json_encode($param));
+                    }
                 }
             } else {
                 if ($result = $this->mysqli->query($sql)) {
                     return $result;
+                } else {
+                    if ($this->mysqli->errno == 2006 || $this->mysqli->errno == 2013) {
+                        $this->realConnect();
+                        continue;
+                    } else {
+                        throw new \Exception($this->mysqli->error . "\n" . ' error sql: ' . $sql . ";\n" . ' param: ' . json_encode($param));
+                    }
                 }
             }
         }
-        throw new \Exception($this->mysqli->error . "\n" . ' error sql: ' . $sql . ";\n" . ' param: ' . json_encode($param));
     }
 
     function __destruct()
@@ -154,9 +192,7 @@ class MySqlBaseDao implements IDBDao
     {
         try {
             return $this->mysqli->commit();
-        } catch (\Exception $e) {
-            
-        } finally {
+        } catch (\Exception $e) {} finally {
             $this->mysqli->autocommit(true);
         }
     }
@@ -169,9 +205,7 @@ class MySqlBaseDao implements IDBDao
     {
         try {
             return $this->mysqli->rollback();
-        } catch (\Exception $e) {
-        
-        } finally {
+        } catch (\Exception $e) {} finally {
             $this->mysqli->autocommit(true);
         }
     }
