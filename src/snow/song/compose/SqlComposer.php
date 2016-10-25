@@ -616,7 +616,13 @@ class SqlComposer
         if (! empty($json['prepend'])) {
             $result[] = $json['prepend'];
         }
+        if (! empty($json['open'])){
+            $result[] = $json['open'];
+        }
         self::parseAllTypes($namespace, $json['contents'], $result, $param);
+        if (! empty($json['close'])){
+            $result[] = $json['close'];
+        }
     }
 
     private static function isEqual(array $json, array $param)
