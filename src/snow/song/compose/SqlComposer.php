@@ -864,7 +864,7 @@ class SqlComposer
     private static function getValue($param, $propertyName)
     {
         $propertyName = '[\'' . implode('\'][\'', explode('.', $propertyName)) . '\']';
-        return eval('return $param' . $propertyName . ';');
+        return eval('return isset($param' . $propertyName . ') ? $param' . $propertyName . ' : null;');
     }
 
     private static function _isset($param, $propertyName)
