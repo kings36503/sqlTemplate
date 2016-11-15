@@ -22,8 +22,6 @@ class SqlComposer
      */
     private $nameSpaces;
 
-    private static $daoArr;
-    
     /**
      *
      * @param string $jsonLocations
@@ -196,12 +194,7 @@ class SqlComposer
                 if (is_array($daoName)) {
                     $daoName = $daoName[0];
                 }
-                if (isset(self::$daoArr[$daoName])) {
-                    $dbDao = self::$daoArr[$daoName];
-                } else {
-                    $dbDao = BeanUtil::getClassInstanceByPath($daoName);
-                    self::$daoArr[$daoName] = $dbDao;
-                }
+                $dbDao = BeanUtil::getClassInstanceByPath($daoName);
                 return $dbDao;
             } else {
                 throw new \Exception('Invalid json sql config, \'daoName\' property is not configured.');
