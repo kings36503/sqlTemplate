@@ -287,6 +287,8 @@ class SqlComposer
             case Constant::RESULT_TYPE_OBJECT:
                 if (count($result) == 1) {
                     return $result[0];
+                } else if(count($result) == 0){
+                    return null;
                 }
                 throw new \Exception('mulitiple objects returned, which object do you want?!!');
                 break;
