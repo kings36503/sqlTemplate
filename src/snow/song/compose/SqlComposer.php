@@ -271,8 +271,10 @@ class SqlComposer
                             return strval(array_values($result[0])[0]);
                         }
                     }
+                    throw new \Exception('result from sql can not case to String type!');
+                }else{
+                    return $result;
                 }
-                throw new \Exception('result from sql can not case to String type!');
                 break;
             case Constant::RESULT_TYPE_NUMBERIC:
                 if (! empty($result)) {
@@ -281,14 +283,20 @@ class SqlComposer
                             return floatval(array_values($result[0])[0]);
                         }
                     }
+                    throw new \Exception('result from sql can not case to Numberic type!');
+                }else{
+                    return $result;
                 }
-                throw new \Exception('result from sql can not case to Numberic type!');
                 break;
             case Constant::RESULT_TYPE_OBJECT:
-                if (count($result) == 1) {
-                    return $result[0];
+                if(!empty($result)){
+                    if (count($result) == 1) {
+                        return $result[0];
+                    }
+                    throw new \Exception('mulitiple objects returned, which object do you want?!!');
+                }else{
+                    return $result;
                 }
-                throw new \Exception('mulitiple objects returned, which object do you want?!!');
                 break;
             case Constant::RESULT_TYPE_NUMBERIC_LIST:
                 foreach ($result as $item) {
