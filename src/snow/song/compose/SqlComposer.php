@@ -20,7 +20,7 @@ class SqlComposer
      *
      * @var unknown
      */
-    private $nameSpaces;
+    protected $nameSpaces;
 
     /**
      *
@@ -273,7 +273,7 @@ class SqlComposer
                     }
                     throw new \Exception('result from sql can not case to String type!');
                 }else{
-                    return $result;
+                    return null;
                 }
                 break;
             case Constant::RESULT_TYPE_NUMBERIC:
@@ -285,7 +285,7 @@ class SqlComposer
                     }
                     throw new \Exception('result from sql can not case to Numberic type!');
                 }else{
-                    return $result;
+                    return null;
                 }
                 break;
             case Constant::RESULT_TYPE_OBJECT:
