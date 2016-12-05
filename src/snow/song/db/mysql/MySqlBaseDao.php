@@ -20,13 +20,16 @@ class MySqlBaseDao implements IDBDao
     private $pwd;
 
     private $db;
+    
+    private $port;
 
-    function __construct($host = '127.0.0.1', $user = 'root', $pwd = 'password', $db = 'mysql')
+    function __construct($host = '127.0.0.1', $user = 'root', $pwd = 'password', $db = 'mysql', $port = '3306')
     {
         $this->host = $host;
         $this->user = $user;
         $this->pwd = $pwd;
         $this->db = $db;
+        $this->port = $port;
         $this->realConnect();
     }
 
@@ -36,7 +39,7 @@ class MySqlBaseDao implements IDBDao
             $this->mysqli->close();
             $this->mysqli = NULL;
         }
-        $this->mysqli = new mysqli($this->host, $this->user, $this->pwd, $this->db);
+        $this->mysqli = new mysqli($this->host, $this->user, $this->pwd, $this->db, $this->port);
         if ($this->mysqli->connect_error) {
             throw new Exception('Connectin Error (' . $this->mysqli->connect_errno . ') ' . $this->mysqli->connect_error);
         }

@@ -15,7 +15,7 @@ class ReportDao extends MySqlBaseDao
         /**
          * change host, username, password of your own mysql server
          */
-        parent::__construct('192.168.43.12', 'root', 'hillstone', 'mysql');
+        parent::__construct('127.0.0.1', 'root', 'hillstone', 'mysql');
     }
 
     function __destruct()

@@ -31,8 +31,8 @@ $sqlComposer->endTranscation('report');
 // query data from database
 $result = $sqlComposer->query('report.getReport', [
     'tableNames' => [
-        'table_1',
-        'table_2'
+        'report.table_1',
+        'report.table_2'
     ],
     'ip' => [
         'hasDstIp' => true,
